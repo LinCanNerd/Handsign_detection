@@ -1,13 +1,38 @@
 import cv2
 import numpy as np
 import os
-from matplotlib import pyplot as plt
 import mediapipe as mp
-
 
 mp_holistic = mp.solutions.holistic  # Holistic model
 mp_drawing = mp.solutions.drawing_utils  # Drawing utilities
 
+#LETTERS OF THE ALPHABET WITH THEIR CORRESPECTIVE LABEL
+alphabet = {
+    0: 'A',
+    1: 'B',
+    2: 'C',
+    3: 'D',
+    4: 'E',
+    5: 'F',
+    6: 'G',
+    7: 'H',
+    8: 'I',
+    9: 'K',
+    10: 'L',
+    11: 'M',
+    12: 'N',
+    13: 'O',
+    14: 'P',
+    15: 'Q',
+    16: 'R',
+    17: 'S',
+    18: 'T',
+    19: 'U',
+    20: 'V',
+    21: 'W',
+    22: 'X',
+    23: 'Y'
+}
 
 def mediapipe_detection(image, model):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # COLOR CONVERSION BGR 2 RGB
@@ -45,22 +70,20 @@ def extract_keypoints(results):
 # Path for exported data
 DATA_DIR = r"C:\Users\Lin Can\Desktop\Handsign project\Handsign_detection\data"
 
-number_of_classes = 24
-dataset_size = 500
-
-
+dataset_size = 300
 
 cap = cv2.VideoCapture(0)
-with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
+with mp_holistic.Holistic(min_detection_confidence=0.3, min_tracking_confidence=0.3) as holistic:
     
-    for j in range(number_of_classes):
+    for j in range(5,len(alphabet.keys()),1):
         if not os.path.exists(os.path.join(DATA_DIR, str(j))):
             os.makedirs(os.path.join(DATA_DIR, str(j)))
 
-        print('Collecting data for class {}'.format(j))
+        print('Collecting data for class {}'.format(alphabet[j]))
 
-        done = False
+        
         while True:
+            #AT EACH ITERATION PRESS q TO START SAVING THE FRAMES
             ret, frame = cap.read()
             image, results = mediapipe_detection(frame, holistic)
             draw_styled_landmarks(image, results)
@@ -70,19 +93,32 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
             if cv2.waitKey(1) == ord('q'):
                 break
 
-        counter = 0
-        while counter < dataset_size:
-            
-            ret, frame = cap.read()
-            image, results = mediapipe_detection(frame, holistic)
-            draw_styled_landmarks(image, results)
-            cv2.putText(image, 'Collecting frames for {} Video Number {}'.format(j, counter), (15,12), 
-                               cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
-            cv2.imshow('frame', image)
-            cv2.waitKey(1)
-            cv2.imwrite(os.path.join(DATA_DIR, str(j), '{}.jpg'.format(counter)), frame)
+        
+        done = True
+        while done:
+            counter = 0
 
-            counter += 1
+            while counter < dataset_size:
+                ret, frame = cap.read()
+                image, results = mediapipe_detection(frame, holistic)
+                image2 = image.copy()
+                draw_styled_landmarks(image, results)
+                cv2.putText(image, 'Collecting pictures for {}  Number picture: {}'.format(alphabet[j], counter), (15,12), 
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
+                cv2.imshow('frame', image)
+                cv2.waitKey(1)
+                cv2.imwrite(os.path.join(DATA_DIR, str(j), '{}.jpg'.format(counter)), frame)
+                counter += 1
+            #IF YOU DONT LIKE THE SET PRESS n TO RESTART IT
+            cv2.putText(image2, 'Do you like the set? y/n', (15,12), 
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
+            cv2.imshow('frame', image2)
+            key = cv2.waitKey(0)
+            if key == ord('y'):
+                done = False
+            if key == ord('n'):
+                pass
+
     print("COLLECTION OVER!")
     cap.release()
     cv2.destroyAllWindows()
