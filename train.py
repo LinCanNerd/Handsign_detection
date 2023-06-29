@@ -9,9 +9,10 @@ import seaborn as sns
 
 
 data_dict = pickle.load(open(r'C:\Users\Lin Can\Desktop\Handsign project\Handsign_detection\data.pickle', 'rb'))
-length_counts = {len(item): data_dict['data'].count(item) for item in data_dict['data']}
+
 data = np.array(data_dict['data'], dtype=float)
 labels = np.array(data_dict['labels'])
+
 x_train, x_test, y_train, y_test = train_test_split(data, labels, test_size=0.2, shuffle=True, stratify=labels)
 
 model = RandomForestClassifier()
