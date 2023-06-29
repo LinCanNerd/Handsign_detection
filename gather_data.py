@@ -68,14 +68,14 @@ def extract_keypoints(results):
 
 
 # Path for exported data
-DATA_DIR = r"C:\Users\Lin Can\Desktop\Handsign project\Handsign_detection\data"
+DATA_DIR = r"C:\Users\Lin Can\Desktop\Handsign project\Handsign_detection\prova"
 
 dataset_size = 300
 
 cap = cv2.VideoCapture(0)
 with mp_holistic.Holistic(min_detection_confidence=0.3, min_tracking_confidence=0.3) as holistic:
     
-    for j in range(5,len(alphabet.keys()),1):
+    for j in range(len(alphabet.keys())):
         if not os.path.exists(os.path.join(DATA_DIR, str(j))):
             os.makedirs(os.path.join(DATA_DIR, str(j)))
 
@@ -87,7 +87,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.3, min_tracking_confidence=
             ret, frame = cap.read()
             image, results = mediapipe_detection(frame, holistic)
             draw_styled_landmarks(image, results)
-            cv2.putText(frame, 'Ready? Press "Q" ! :)', (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 255, 0), 3,
+            cv2.putText(image, 'Ready? Press "Q" ! :)', (100, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 255, 0), 3,
                         cv2.LINE_AA)
             cv2.imshow('frame', image)
             if cv2.waitKey(1) == ord('q'):

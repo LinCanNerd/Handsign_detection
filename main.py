@@ -5,16 +5,15 @@ import numpy as np
 
 model_dict = pickle.load(open(r'C:\Users\Lin Can\Desktop\Handsign project\Handsign_detection\model.p', 'rb'))
 model = model_dict['model']
-
 cap = cv2.VideoCapture(0)
 
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 
-hands = mp_hands.Hands(static_image_mode=True, min_detection_confidence=0.3)
+hands = mp_hands.Hands(static_image_mode=True, min_detection_confidence=0.3, max_num_hands=1)
 
-labels_dict = alphabet = {
+alphabet = {
     0: 'A',
     1: 'B',
     2: 'C',
@@ -40,14 +39,12 @@ labels_dict = alphabet = {
     22: 'X',
     23: 'Y'
 }
-while True:
 
+while True:
     data_aux = []
     x_ = []
     y_ = []
-
     ret, frame = cap.read()
-
     H, W, _ = frame.shape
 
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -83,8 +80,11 @@ while True:
 
         data_aux = data_aux[:42]
         prediction = model.predict([np.asarray(data_aux)])
-
-        predicted_character = labels_dict[int(prediction[0])]
+        confidence_threshold = 0.5
+        predicted_character = alphabet[int(prediction[0])]
+        
+        #it returns string of the label inside a list example ["0"]
+        print(prediction)
 
         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 0), 4)
         cv2.putText(frame, predicted_character, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 0, 0), 3,
