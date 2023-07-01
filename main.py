@@ -2,8 +2,14 @@ import pickle
 import cv2
 import mediapipe as mp
 import numpy as np
+import sign_manager as manager
+import time
 
-model_dict = pickle.load(open(r'C:\Users\Lin Can\Desktop\Handsign project\Handsign_detection\model.p', 'rb'))
+
+with open("audios.py") as f:
+    exec(f.read())
+
+model_dict = pickle.load(open(r'C:\Users\Olha Biziura\sr\github\Handsign_detection\model.p', 'rb'))
 model = model_dict['model']
 cap = cv2.VideoCapture(0)
 
@@ -39,13 +45,21 @@ alphabet = {
     22: 'X',
     23: 'Y'
 }
+global predicted_character,previous_predicted_character
+previous_predicted_character=None
+predicted_character = None
+global action_state  
+action_state = True
 
 while True:
+    #print("tick")
+    #time.sleep(6.0 - ((time.time() - starttime) % 6.0))
     normalization = []
     x_ = []
     y_ = []
     ret, frame = cap.read()
     H, W, C = frame.shape
+    
 
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
@@ -79,9 +93,29 @@ while True:
 
         normalization = normalization[:42]
         prediction = model.predict([np.asarray(normalization)])
-        print(max(model.predict_proba([np.asarray(normalization)])[0]))
+        #print(max(model.predict_proba([np.asarray(normalization)])[0]))
         confidence_threshold = 0.8
+        
         predicted_character = alphabet[int(prediction[0])]
+
+        
+        if previous_predicted_character!=predicted_character:
+            starttime = time.time()
+            print('you changed character from {} to {}'.format(previous_predicted_character,predicted_character))
+            previous_predicted_character = predicted_character   
+        else:
+            if time.time()-starttime<2:
+                print(time.time()-starttime)
+                #print('hold character')
+            else:
+                
+                if predicted_character == 'I':
+                    action_state = True
+                if action_state==True:
+                    manager.sign_manager(predicted_character)
+                if predicted_character == 'B':
+                    action_state = False
+                starttime = time.time()
 
         #it returns string of the label inside a list example ["0"]
         #print(prediction)
@@ -89,8 +123,9 @@ while True:
         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 0), 4)
         cv2.putText(frame, predicted_character, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 0, 0), 3,
                     cv2.LINE_AA)
-
-    cv2.imshow('frame', frame)
+        
+    
+    cv2.imshow("sign assistant", frame)
     cv2.waitKey(1)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         cap.release()
