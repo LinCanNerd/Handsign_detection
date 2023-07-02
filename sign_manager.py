@@ -6,6 +6,7 @@ import calculator
 import open_music
 import screenshot, create_txt
 import stop,restart
+import clock
 def sign_manager(key):
     if key =='A':
         create_txt.open()
@@ -13,6 +14,8 @@ def sign_manager(key):
         stop.stop()
     if key == 'C':
         calculator.open()
+    if key == 'D':
+        clock.open()
     if key =='I':
         restart.start()
     if key == 'L':

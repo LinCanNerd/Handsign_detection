@@ -4,9 +4,24 @@ import mediapipe as mp
 import numpy as np
 import sign_manager as manager
 import time
+import os
+from os.path import abspath
+from inspect import getsourcefile
+
+import ctypes
+
+user32 = ctypes.windll.user32
+screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
 
 
-with open("audios.py") as f:
+'''
+from pywinauto.findwindows    import find_window
+from pywinauto.win32functions import SetForegroundWindow
+SetForegroundWindow(find_window(title='taskeng.exe'))
+'''
+
+audios_path =  os.path.dirname(abspath(getsourcefile(lambda:0)) )
+with open(audios_path+"\sounds.py") as f:
     exec(f.read())
 
 model_dict = pickle.load(open(r'C:\Users\Olha Biziura\sr\github\Handsign_detection\model.p', 'rb'))
@@ -104,7 +119,7 @@ while True:
             print('you changed character from {} to {}'.format(previous_predicted_character,predicted_character))
             previous_predicted_character = predicted_character   
         else:
-            if time.time()-starttime<2:
+            if time.time()-starttime<1.5:
                 print(time.time()-starttime)
                 #print('hold character')
             else:
@@ -115,6 +130,8 @@ while True:
                     manager.sign_manager(predicted_character)
                 if predicted_character == 'B':
                     action_state = False
+                if predicted_character == 'Y':
+                    quit()
                 starttime = time.time()
 
         #it returns string of the label inside a list example ["0"]
@@ -125,7 +142,14 @@ while True:
                     cv2.LINE_AA)
         
     
+    
+
+    cv2.namedWindow("sign assistant",cv2.WINDOW_NORMAL)
+    cv2.resizeWindow("sign assistant", 300,200)
+    cv2.moveWindow('sign assistant',screensize[0]-300,screensize[1]-300)
+    cv2.setWindowProperty('sign assistant', cv2.WND_PROP_TOPMOST, 1)
     cv2.imshow("sign assistant", frame)
+
     cv2.waitKey(1)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         cap.release()

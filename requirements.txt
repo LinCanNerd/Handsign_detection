@@ -5,3 +5,12 @@ pickle
 scikit-learn
 matplotlib
 seaborn
+os
+playsound
+gtts
+webbrowser
+speech_recognition
+requests
+time
+PathLib
+PIL

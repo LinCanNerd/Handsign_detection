@@ -4,6 +4,11 @@ language = 'en'
 #stop = gTTS(text='detection stopped', lang = language, slow = False)
 #stop.save('stop.mp3')
 try:
+    myobj7 = gTTS(text = 'opening timer',lang = language, slow = False )
+    myobj7.save('clock.mp3')
+except:
+    pass
+try:
     myobj7 = gTTS(text ='opening notepad', lang = language, slow = False)
     myobj7.save('notepad.mp3')
 except:

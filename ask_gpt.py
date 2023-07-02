@@ -26,6 +26,7 @@ def convert(audio):
 
     question = r.recognize_google(audio)
     print(question)
+    
     response = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
     messages = [{"role": "user", "content": "question"}],
