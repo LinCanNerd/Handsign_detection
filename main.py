@@ -2,12 +2,11 @@ import pickle
 import cv2
 import mediapipe as mp
 import numpy as np
-import sign_manager as manager
 import time
 import os
 from os.path import abspath
 from inspect import getsourcefile
-
+import sign_manager as manager
 import ctypes
 
 user32 = ctypes.windll.user32
@@ -116,18 +115,20 @@ while True:
         
         if previous_predicted_character!=predicted_character:
             starttime = time.time()
-            print('you changed character from {} to {}'.format(previous_predicted_character,predicted_character))
+            #print('you changed character from {} to {}'.format(previous_predicted_character,predicted_character))
             previous_predicted_character = predicted_character   
         else:
             if time.time()-starttime<1.5:
-                print(time.time()-starttime)
+                #print(time.time()-starttime)
                 #print('hold character')
+                pass
             else:
                 
                 if predicted_character == 'I':
                     action_state = True
                 if action_state==True:
                     manager.sign_manager(predicted_character)
+                    starttime = time.time()
                 if predicted_character == 'B':
                     action_state = False
                 if predicted_character == 'Y':
@@ -145,8 +146,8 @@ while True:
     
 
     cv2.namedWindow("sign assistant",cv2.WINDOW_NORMAL)
-    cv2.resizeWindow("sign assistant", 300,200)
-    cv2.moveWindow('sign assistant',screensize[0]-300,screensize[1]-300)
+    cv2.resizeWindow("sign assistant", 280,200)
+    cv2.moveWindow('sign assistant',screensize[0]-280,screensize[1]-300)
     cv2.setWindowProperty('sign assistant', cv2.WND_PROP_TOPMOST, 1)
     cv2.imshow("sign assistant", frame)
 

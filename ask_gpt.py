@@ -6,7 +6,7 @@ import playsound
 from gtts import gTTS
 import os
 
-openai.api_key = "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"
+openai.api_key = "Your Key here"
 
 
 r = sr.Recognizer() 

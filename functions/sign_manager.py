@@ -1,8 +1,8 @@
 import os 
-import weather
-import search_in_google
-import translator
-import calculator, open_music, screenshot, create_txt, stop, restart, clock
+from actions import weather
+from actions import search_in_google
+from actions import translator
+from actions import calculator, open_music, screenshot, create_txt, stop, restart, clock
 def sign_manager(key):
     if key =='A':
         create_txt.open()
