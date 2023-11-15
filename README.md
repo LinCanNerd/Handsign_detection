@@ -69,9 +69,12 @@ While developing this project, we encountered several challenges in achieving ac
 ## Contributing
 
 We welcome contributions from the community. If you have ideas, bug fixes, or improvements, feel free to open an issue or submit a pull request.
-\n Biziura Olha,
-\n Lin Can,
-\n Srymova Aruta.
+
+Biziura Olha,
+
+Lin Can,
+
+Srymova Aruta.
 
 ## License
 
