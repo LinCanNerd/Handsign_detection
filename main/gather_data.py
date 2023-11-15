@@ -51,8 +51,8 @@ def draw_styled_landmarks(image, results):
                              mp_drawing.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2)
                              )
 
-# Path for exported data
-DATA_DIR = r"C:\Users\Lin Can\Desktop\Handsign project\Handsign_detection\prova"
+# Put the path for the storage of all the data
+DATA_DIR = r""
 
 dataset_size = 300
 
